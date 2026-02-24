@@ -1,7 +1,7 @@
 
 # Local OpenRAG
 
-OpenRAG configured to run locally through `ollama` plus `docling` integrated as another container.
+OpenRAG configured to run locally through `ollama` plus `docling` and `langfuse`.
 
 ### Initial setup
 
@@ -13,6 +13,10 @@ OpenRAG configured to run locally through `ollama` plus `docling` integrated as 
 4. Go to [Langflow MCP config](http://localhost:7860/settings/mcp-servers), edit the `lf-starter_project` tool and replace the IP in the URL argument with `langflow`.
 5. Go to http://localhost:3000 and complete the setup by selecting Ollama's language and embedding models.
 
+Notes
+- `run-gpu.sh` launches Langfuse by default, omit `-f docker-compose.langfuse.yml` to opt-out.
+- `gpt-oss` LLM Model chosen for a 16gb VRAM GPU (see step 2 to change).
+
 ### Container Services
 
 | Container Name | Default Address | Purpose |
@@ -22,10 +26,11 @@ OpenRAG configured to run locally through `ollama` plus `docling` integrated as 
 | Langflow | http://localhost:7860 | AI workflow engine. |
 | OpenSearch | http://localhost:9200 | Datastore for knowledge. |
 | OpenSearch Dashboards | http://localhost:5601 | OpenSearch database administration interface. |
+| Langfuse | http://localhost:3002 | LLM observability. |
 
 ### Known issues
 
-- Langflow sets a wrong URL for the MCP tool (workaround at setup step 4.)
+- Langflow sets a wrong URL for the MCP tool (workaround at setup step 4).
 - Wrong fallback syntax at `settings.py` for `LANGFLOW_KEY_RETRIES` and `LANGFLOW_KEY_RETRY_DELAY` (workaround by explicitly setting them in `.env`).
 - Watch for default context windows. For example, `mistral-nemo:12b` defaults to only 4096 which will cause the chat to fail with `Sorry, I couldn't connect to the chat service.` error message most likely on the second user prompt. `OLLAMA_CONTEXT_LENGTH` variable introduced in `.env` to address this.
 
